@@ -1,0 +1,15 @@
+{
+  "name": "mongoose-playground",
+  "version": "1.0.0",
+  "description": "Test mongoose with in-memory mongodb",
+  "main": "index.js",
+  "scripts": {
+    "docker": "docker-compose up -d"
+  },
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "mongodb-memory-server": "^6.2.4",
+    "mongoose": "^5.9.1"
+  }
+}
