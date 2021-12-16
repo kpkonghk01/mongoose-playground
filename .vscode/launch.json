@@ -5,9 +5,7 @@
       "type": "node",
       "request": "launch",
       "name": "MemoryDb",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "args": ["memory"],
       "program": "${workspaceFolder}/index.js"
     },
@@ -15,9 +13,7 @@
       "type": "node",
       "request": "launch",
       "name": "DockerDb",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "args": ["mongo"],
       "program": "${workspaceFolder}/index.js"
     }
