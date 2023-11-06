@@ -9,7 +9,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "mongodb-memory-server": "8.9.3",
+    "mongodb-memory-server": "9.0.1",
     "mongoose": "6.11.3",
     "ramda": "0.28.0"
   }
