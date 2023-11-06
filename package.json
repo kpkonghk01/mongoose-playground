@@ -10,7 +10,7 @@
   "private": false,
   "dependencies": {
     "mongodb-memory-server": "8.9.3",
-    "mongoose": "6.6.7",
+    "mongoose": "6.11.3",
     "ramda": "0.28.0"
   }
 }
