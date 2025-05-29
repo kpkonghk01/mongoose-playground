@@ -1,4 +1,4 @@
-const dbType = process.argv[2];
+const dbType = process.argv[2] || "memory";
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongoose = require("mongoose");
 
@@ -42,13 +42,9 @@ switch (dbType) {
     agent = new Agent(mongod);
     break;
   case "mongo":
-    mongoose.connect("mongodb://localhost:27018", {
+    mongoose.connect("mongodb://localhost:27017", {
       keepAlive: true,
       dbName: "localTest",
-      useNewUrlParser: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
       autoIndex: true,
     });
     mongoose.set("debug", true);

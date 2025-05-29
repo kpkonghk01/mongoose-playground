@@ -1,7 +1,37 @@
+const R = require("ramda");
 const mongoose = require("mongoose");
 const agent = require("./db/setup");
 
 const { Schema, model } = mongoose;
+
+const transformUpdateData = R.reject(R.equals(undefined));
+
+const flattenObj = (obj) => {
+  const go = (obj_) =>
+    R.chain(([k, v]) => {
+      if (R.type(v) === "Object" && v.constructor === Object && !R.isEmpty(v)) {
+        return R.map(([k_, v_]) => [`${k}.${k_}`, v_], go(v));
+      }
+
+      return [[k, v]];
+    }, R.toPairs(obj_));
+
+  const isSet = R.has("$set", obj);
+  const isUnset = R.has("$unset", obj);
+  const isPull = R.has("$pull", obj);
+  const isPush = R.has("$push", obj);
+
+  if (isSet || isUnset || isPull || isPush) {
+    return {
+      ...(isSet ? { $set: R.fromPairs(go(R.prop("$set", obj))) } : {}),
+      ...(isUnset ? { $unset: R.fromPairs(go(R.prop("$unset", obj))) } : {}),
+      // $pull/$push itself is a query with operators like $in, should not be flatten
+      ...(isPull || isPush ? obj : {}),
+    };
+  }
+
+  return R.fromPairs(go(obj));
+};
 
 (async () => {
   const TagSchema = new Schema(
@@ -32,14 +62,11 @@ const { Schema, model } = mongoose;
   console.log("Created:", JSON.stringify(story, null, 2));
 
   await Promise.all([
-    Story.updateOne(
-      {
-        _id: story._id,
-      },
-      {
-        tag,
-      }
-    ),
+    Story.findByIdAndUpdate(story._id, {
+      // we always flatten the obj becoz we got many nested docs
+      // FIXME: figure out better solution to resolve the update issue
+      ...transformUpdateData(flattenObj({ tag })),
+    }),
   ]);
 
   let results = await Story.find({}).lean().exec();
